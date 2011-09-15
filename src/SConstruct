@@ -1,0 +1,102 @@
+env = Environment(CPPPATH=['.', 'heaplayers', 'heaplayers/util'])
+sources = []
+if 'freebsd_compile' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-O2', '-DNDEBUG', '-DNDEBUG', '-D_REENTRANT=1', '-Bsymbolic', '-pthread', '-fPIC'])
+elif 'macos_compile' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-Wall', '-pedantic', '-Wextra', '-Wchar-subscripts', '-Wcomment', '-Wformat', '-Winit-self', '-Wuninitialized', '-pipe', '-O2', '-DNDEBUG', '-D_REENTRANT=1', '-compatibility_version', '1', '-current_version', '1', '-dynamiclib', '-ldl', '-lpthread'])
+    env.Append(LIBS=['dl', 'pthread'])
+elif 'macos_compile_debug' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-pipe', '-g', '-D_REENTRANT=1', '-compatibility_version', '1', '-current_version', '1', '-dynamiclib', '-ldl', '-lpthread'])
+    env.Append(LIBS=['dl', 'pthread'])
+elif 'linux_gcc_x86_compile' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp', 'gnuwrapper.cpp']
+    env.Append(CPPFLAGS=['-m32', '-I/usr/include/nptl', '-ffast-math', '-g', '-malign-double', '-pipe', '-march=pentium4', '-O3', '-finline-limit=20000', '-fomit-frame-pointer', '-finline-functions', '-DNDEBUG', '-D_REENTRANT=1', "-D'CUSTOM_PREFIX(x)=hoard##x'", '-Bsymbolic', '-ldl', '-lpthread'])
+    env.Append(CPPPATH=['/usr/include/nptl'])
+    env.Append(LIBS=['dl', 'pthread'])
+elif 'linux_gcc_x86_64_compile' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp', 'gnuwrapper.cpp']
+    env.Append(CPPFLAGS=['-W', '-Wconversion', '-Wall', '-march=nocona', '-m64', '-msse2', '-I/usr/include/nptl', '-pipe', '-fPIC', '-O3', '-finline-limit=20000', '-fomit-frame-pointer', '-finline-functions', '-DNDEBUG', '-D_REENTRANT=1', "-D'CUSTOM_PREFIX(x)=hoard##x'", '-Bsymbolic', '-ldl', '-lpthread'])
+    env.Append(CPPPATH=['/usr/include/nptl'])
+    env.Append(LIBS=['dl', 'pthread'])
+elif 'linux_gcc_x86_64_compile_debug' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp', 'gnuwrapper.cpp']
+    env.Append(CPPFLAGS=['-W', '-Wconversion', '-Wall', '-march=nocona', '-m64', '-I/usr/include/nptl', '-pipe', '-fPIC', '-O0', '-g', '-D_REENTRANT=1', "-D'CUSTOM_PREFIX(x)=hoard##x'", '-Bsymbolic', '-ldl', '-lpthread'])
+    env.Append(CPPPATH=['/usr/include/nptl'])
+    env.Append(LIBS=['dl', 'pthread'])
+elif 'linux_gcc_x86_compile_static' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp', 'gnuwrapper.cpp']
+    env.Append(CPPFLAGS=['-m32', '-I/usr/include/nptl', '-malign-double', '-pipe', '-march=pentium4', '-O3', '-finline-limit=20000', '-fomit-frame-pointer', '-finline-functions', '-DNDEBUG', '-D_REENTRANT=1', "-D'CUSTOM_PREFIX(x)=hoard##x'", '-c', ';', 'ar', 'cr'])
+    env.Append(CPPPATH=['/usr/include/nptl'])
+elif 'linux_gcc_x86_compile_debug' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp', 'gnuwrapper.cpp']
+    env.Append(CPPFLAGS=['-m32', '-O0', '-fno-inline', '-malign-double', '-I/usr/include/nptl', '-g', '-pipe', '-D_REENTRANT=1', "-D'CUSTOM_PREFIX(x)=hoard##x'", '-Bsymbolic', '-ldl', '-lpthread'])
+    env.Append(CPPPATH=['/usr/include/nptl'])
+    env.Append(LIBS=['dl', 'pthread'])
+elif 'solaris_sunw_sparc_compile_32_debug' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-dalign', '-mt', '-g', '-xildoff', '-xthreadvar=dynamic', '-L/usr/lib/lwp', '-R/usr/lib/lwp', '-DNDEBUG', '-D_REENTRANT=1', '-G', '-PIC', 'heaplayers/util/sparc-interchange.il', 'libhoard_32.so', '-lthread', '-ldl', '-lCrun'])
+    env.Append(LIBS=['thread', 'dl', 'Crun'])
+elif 'solaris_sunw_sparc_compile_32' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-dalign', '-xbuiltin=%all', '-mt', '-xO5', '-fast', '-xtarget=ultra2', '-xildoff', '-xthreadvar=dynamic', '-L/usr/lib/lwp', '-R/usr/lib/lwp', '-DNDEBUG', '-D_REENTRANT=1', '-G', '-PIC', 'heaplayers/util/sparc-interchange.il', 'libhoard_32.so', '-lthread', '-ldl', '-lCrun'])
+    env.Append(LIBS=['thread', 'dl', 'Crun'])
+elif 'solaris_sunw_sparc_compile_64' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-xcode=pic13', '-m64', '-mt', '-fast', '-dalign', '-xbuiltin=%all', '-xO5', '-xtarget=ultra2', '-xildoff', '-xthreadvar=dynamic', '-L/usr/lib/lwp', '-R/usr/lib/lwp', '-DNDEBUG', '-D_REENTRANT=1', '-G', '-PIC', 'heaplayers/util/sparc-interchange.il', 'libhoard_64.so', '-lthread', '-ldl', '-lCrun'])
+    env.Append(LIBS=['thread', 'dl', 'Crun'])
+elif 'solaris_sunw_x86_compile_32' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-fns', '-fsimple=2', '-ftrap=%none', '-xbuiltin=%all', '-mt', '-xO5', '-fast', '-xildoff', '-xthreadvar=dynamic', '-L/usr/lib/lwp', '-R/usr/lib/lwp', '-DNDEBUG', '-D_REENTRANT=1', '-G', '-PIC', 'heaplayers/util/x86-interchange.il', 'libhoard_32.so', '-lthread', '-ldl', '-lCrun'])
+    env.Append(LIBS=['thread', 'dl', 'Crun'])
+elif 'solaris_sunw_x86_compile_32_debug' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-mt', '-g', '-xildoff', '-xthreadvar=dynamic', '-L/usr/lib/lwp', '-R/usr/lib/lwp', '-D_REENTRANT=1', '-G', '-PIC', 'heaplayers/util/x86-interchange.il', 'libhoard_32.so', '-lthread', '-ldl', '-lCrun'])
+    env.Append(LIBS=['thread', 'dl', 'Crun'])
+elif 'solaris_sunw_x86_compile_64' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-xarch=amd64', '-fns', '-fsimple=2', '-ftrap=%none', '-xbuiltin=%all', '-xO5', '-xildoff', '-xthreadvar=dynamic', '-L/usr/lib/lwp', '-R/usr/lib/lwp', '-DNDEBUG', '-D_REENTRANT=1', '-G', '-PIC', 'heaplayers/util/x86_64-interchange.il', 'libhoard_64.so', '-lthread', '-ldl', '-lCrun'])
+    env.Append(LIBS=['thread', 'dl', 'Crun'])
+elif 'solaris_gcc_sparc_compile_32' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-nostartfiles', '-pipe', '-DNDEBUG', '-mcpu=ultrasparc', '-m32', '-O3', '-finline-limit=20000', '-fPIC', '-fkeep-inline-functions', '-finline-functions', '-ffast-math', '-fomit-frame-pointer', '-D_REENTRANT=1', '-lthread', '-lpthread', '-ldl', 'libhoard_32.so'])
+    env.Append(LIBS=['thread', 'pthread', 'dl'])
+elif 'solaris_gcc_sparc_compile_64' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-nostartfiles', '-pipe', '-DNDEBUG', '-mcpu=ultrasparc', '-m64', '-O3', '-finline-limit=20000', '-fPIC', '-fkeep-inline-functions', '-finline-functions', '-ffast-math', '-fomit-frame-pointer', '-D_REENTRANT=1', '-lthread', '-lpthread', '-ldl', 'libhoard_64.so'])
+    env.Append(LIBS=['thread', 'pthread', 'dl'])
+elif 'solaris_gcc_sparc_compile_debug' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp']
+    env.Append(CPPFLAGS=['-nostartfiles', '-pipe', '-mcpu=ultrasparc', '-g', '-fPIC', '-D_REENTRANT=1', '-lthread', '-lpthread', '-ldl'])
+    env.Append(LIBS=['thread', 'pthread', 'dl'])
+elif 'generic_gcc_compile' in COMMAND_LINE_TARGETS:
+    sources = ['libhoard.cpp', 'gnuwrapper.cpp']
+    env.Append(CPPFLAGS=['-I/usr/include/nptl', '-malign-double', '-pipe', '-O3', '-finline-limit=20000', '-fomit-frame-pointer', '-finline-functions', '-DNDEBUG', '-D_REENTRANT=1', "-D'CUSTOM_PREFIX(x)=hoard##x'", '-Bsymbolic', '-ldl', '-lpthread'])
+    env.Append(CPPPATH=['/usr/include/nptl'])
+    env.Append(LIBS=['dl', 'pthread'])
+
+
+
+libhoard = env.SharedLibrary(sources, SHLIBPREFIX='')
+
+Default()
+Alias('freebsd_compile', libhoard)
+Alias('macos_compile', libhoard)
+Alias('macos_compile_debug', libhoard)
+Alias('linux_gcc_x86_compile', libhoard)
+Alias('linux_gcc_x86_64_compile', libhoard)
+Alias('linux_gcc_x86_64_compile_debug', libhoard)
+Alias('linux_gcc_x86_compile_static', libhoard)
+Alias('linux_gcc_x86_compile_debug', libhoard)
+Alias('solaris_sunw_sparc_compile_32_debug', libhoard)
+Alias('solaris_sunw_sparc_compile_32', libhoard)
+Alias('solaris_sunw_sparc_compile_64', libhoard)
+Alias('solaris_sunw_x86_compile_32', libhoard)
+Alias('solaris_sunw_x86_compile_32_debug', libhoard)
+Alias('solaris_sunw_x86_compile_64', libhoard)
+Alias('solaris_gcc_sparc_compile_32', libhoard)
+Alias('solaris_gcc_sparc_compile_64', libhoard)
+Alias('solaris_gcc_sparc_compile_debug', libhoard)
+Alias('generic_gcc_compile', libhoard)
